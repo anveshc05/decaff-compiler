@@ -30,7 +30,7 @@
 %token CONTINUE
 
 %left ','
-%right EQ PE ME
+%right '=' PE ME
 %left OROR
 %left ANDAND
 %left EE NE
@@ -42,7 +42,7 @@
 
 %%
 
-program:	CLASS PROGRAM '{' '}'
+program:	CLASS PROGRAM '{' /* empty */'}'
 		|	CLASS PROGRAM '{' fields '}'
 		;
 
@@ -100,7 +100,7 @@ statement:	location assign_op expr ';'
 		|	block
 		;
 
-assign_op:	EQ
+assign_op:	'='
 		|	PE
 		|	ME
 		;
@@ -110,8 +110,8 @@ type:	INT
 	;
 
 expr:	location
-	|	method_call
 	|	literal
+	|	method_call
 	|	expr bin_op expr
 	|	'-' expr
 	|	'!' expr
@@ -128,13 +128,17 @@ method_call:	ID '(' method_arguments ')'
 			|	CALLOUT '(' str_lit ',' callout_arguments ')'
 			;
 
-method_arguments:	expr
-				|	str_lit
+method_arguments:	common_arg
+				|	common_arg ',' method_arguments
 				;
 
-callout_arguments:	expr
-				|	str_lit
+callout_arguments:	common_arg
+				|	common_arg ',' callout_arguments
 				;
+
+common_arg:		expr
+		|		str_lit
+		;
 
 literal:	int_lit
 		|	char_lit

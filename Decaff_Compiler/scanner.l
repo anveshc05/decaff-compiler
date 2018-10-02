@@ -5,10 +5,11 @@
 
 digit [0-9]
 alpha [a-zA-Z]
-str \"({alpha}|{digit}|%)*\"
 id_reg {alpha}({alpha}|{digit})*
-dec ^[0-9]*(\.[0-9]+)?$
+charact (\\n|\\t|\\'|\\\\|\\\"|[^\\"'])
+dec {digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 hex 0x(digit|[A-Fa-f])+ 
+str \"(\\.|[^"\\])*\"
 
 %%
 "(" 				{printf("("); return '(';}
@@ -35,9 +36,10 @@ hex 0x(digit|[A-Fa-f])+
 "<" 				{printf("<"); return '<';}
 "+="				{printf("+="); return PE;}
 "-="				{printf("-="); return ME;}
-"="					{printf("="); return EQ;}
+"="					{printf("="); return '=';}
 "," 				{printf(","); return ',';}
 "'"					{printf("'"); return SIC;}
+" "					{printf("SPACE");}
 "class"				{printf("class"); return CLASS;}
 "Program"			{printf("Program"); return PROGRAM;}
 "int"				{printf("int"); return INT;}
@@ -46,6 +48,7 @@ hex 0x(digit|[A-Fa-f])+
 "if"				{printf("if"); return IF;}
 "else"				{printf("else"); return ELSE;}
 "for"				{printf("for"); return FOR;}
+{dec}				{printf("dec"); return DECIMAL;}
 "return"			{printf("return"); return RETURN;}
 "break"				{printf("break"); return BREAK;}
 "continue"			{printf("continue"); return CONTINUE;}
@@ -53,7 +56,6 @@ hex 0x(digit|[A-Fa-f])+
 "true" 				{printf("true"); return TRUE_INP;}
 "false" 			{printf("false"); return FALSE_INP;}
 {str}				{printf("str"); return STR;}
-{dec}				{printf("dec"); return DECIMAL;}
 {hex}				{printf("hex"); return HEXADECIMAL;}
 {id_reg}			{printf("ID"); return ID;}
 .					{ printf("Line No %d: Unrecognized Character\n", lineno);}
