@@ -7,7 +7,9 @@
 	}
 %}
 
-%start expr
+%start program
+%token CLASS
+%token PROGRAM
 %token ID
 %token DECIMAL
 %token HEXADECIMAL
@@ -15,7 +17,20 @@
 %token FALSE_INP
 %token ALPHA
 %token CALLOUT
+%token SIC
+%token STR
+%token INT
+%token BOOLEAN
+%token VOID
+%token IF
+%token ELSE
+%token FOR
+%token RETURN
+%token BREAK
+%token CONTINUE
 
+%left ','
+%right EQ PE ME
 %left OROR
 %left ANDAND
 %left EE NE
@@ -26,6 +41,73 @@
 %left '(' ')' '[' ']'
 
 %%
+
+program:	CLASS PROGRAM '{' '}'
+		|	CLASS PROGRAM '{' fields '}'
+		;
+
+fields:		field_declaration
+		|	field_declaration fields
+		|	method_declaration
+		|	method_declaration fields
+
+field_declaration:	type vars ';'
+				;
+
+vars:	var
+	|	var ',' vars
+	;
+
+var:	ID
+	|	ID '[' int_lit ']'
+	;
+
+method_declaration:	type ID '(' /* empty */ ')' block 
+				|	type ID  '(' method_declaration_args ')' block
+				|	VOID ID '(' ')' block
+				|	VOID ID  '(' method_declaration_args ')' block
+				;
+
+method_declaration_args:	type ID
+					|		method_declaration_args ',' type ID
+					;
+
+
+block:	'{' block_declarations '}'
+	;
+
+block_declarations:	/* empty */
+				|	variable_decl block_declarations
+				|	statement block_declarations
+				;
+
+variable_decl:	type variables ';'
+			;
+
+variables:	ID
+		|	ID ',' variables
+		;
+
+statement:	location assign_op expr ';'
+		|	method_call ';'
+		|	IF '(' expr ')' block 
+		|	IF '(' expr ')' block ELSE block
+		|	FOR ID '=' expr ',' expr block
+		|	RETURN ';'
+		|	RETURN expr ';'
+		|	BREAK ';'
+		|	CONTINUE ';'
+		|	block
+		;
+
+assign_op:	EQ
+		|	PE
+		|	ME
+		;
+
+type:	INT
+	| BOOLEAN
+	;
 
 expr:	location
 	|	method_call
@@ -41,12 +123,9 @@ location:	ID
 		;
 
 
-method_call:	method_name '(' method_arguments ')'
+method_call:	ID '(' method_arguments ')'
 			|	CALLOUT '(' str_lit ')'
 			|	CALLOUT '(' str_lit ',' callout_arguments ')'
-			;
-
-method_name:	ID
 			;
 
 method_arguments:	expr
@@ -66,11 +145,10 @@ int_lit:	DECIMAL
 		|	HEXADECIMAL
 		;
 
-char_lit:	ALPHA
+char_lit:	SIC ALPHA SIC
 		;
 
-str_lit:	char_lit
-		|	ALPHA str_lit
+str_lit:	STR
 		;
 
 bin_op:		arith_op
