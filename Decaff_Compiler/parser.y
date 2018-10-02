@@ -86,6 +86,8 @@ variable_decl:	type variables ';'
 
 variables:	ID
 		|	ID ',' variables
+		|	ID '[' int_lit ']'
+		|	ID '[' int_lit ']' ',' variables
 		;
 
 statement:	location assign_op expr ';'
