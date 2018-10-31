@@ -2,11 +2,11 @@ class Program {
     int arr[50];
     int main() {
         int max;
-        max = -1000000005;
+        int i, n;
         int min;
+        max = -1000000005;
         min = 1000000005;
         callout("scanf", "%d", n);
-        int i;
         i = 0;
         for i = 0, n {
             callout("scanf", "%d", arr[i]);

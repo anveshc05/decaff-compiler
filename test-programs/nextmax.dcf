@@ -2,15 +2,15 @@ class Program {
     int arr[50];
     int main() {
         int max;
-        max = -1000000005;
         int nextmax;
+        int i;
+        max = -1000000005;
         nextmax = -1000000005;
         callout("scanf","%d\n", n);
         if( n < 2){
             callout("printf", "Invalid Input");            
         }
         else{
-            int i;
             i = 0;
             for i = 0, n {
                 callout("scanf", "%d", arr[i]);

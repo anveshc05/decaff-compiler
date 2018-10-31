@@ -1,5 +1,6 @@
 class Program {
     int main() {
+        int i,  flag, n;
         callout("scanf","%d", n);
         for i = 2 , n {
             if(n%i == 0){

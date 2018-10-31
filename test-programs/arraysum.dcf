@@ -1,11 +1,9 @@
 class Program {
     int arr[50];
     int main() {
-        int sum;
+        int sum, i, n;
         sum = 0;
-        int n;
         callout("scanf","%d", n);
-        int i;
         for i = 0, n {
             callout("scanf","%d", arr[i]);
             sum+=arr[i];
