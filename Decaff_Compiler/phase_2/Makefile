@@ -4,4 +4,4 @@ all: parser.yy scanner.l
 		g++ -g lex.yy.c parser.tab.cc -lfl -o parser
 
 clean: 
-	rm ./lex.yy.c ./parser.tab.cc ./parser.tab.hh ./parser ./parser.yy
+	rm lex.yy.c parser.tab.cc parser.tab.hh parser
