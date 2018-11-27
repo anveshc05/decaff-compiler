@@ -46,6 +46,7 @@ Value *AST::codeGen(CodeGenContext& context) {
         Value *out = (*_fields)[i]->codeGen(context);
         if(flag){
             iterator = static_cast<Function *> (out);
+            flag = 0;
         }
 
     }
@@ -81,6 +82,7 @@ Value *Field_method::codeGen(CodeGenContext& context) {
         return fl->codeGen(context);
     }
     if (meth) {
+        // cout << meth->_id->_id;
         if (strcmp(meth->_id->_id,"main")==0){
             checkmain = 1;
             flag=1;
@@ -90,7 +92,7 @@ Value *Field_method::codeGen(CodeGenContext& context) {
 }
 
 Value *Variable::codeGen(CodeGenContext& context) {
-    ErrorHandler("lalalal");
+    ErrorHandler("Aa jaa yahaaaaaaa");
     ArrayDecl *arrdec = dynamic_cast<ArrayDecl *> (this);
     if (arrdec) {
         return arrdec->codeGen(context);
@@ -109,7 +111,7 @@ Value *Variable::codeGen(CodeGenContext& context) {
 Value *Field::codeGen(CodeGenContext& context){
     Value * val;
     for(int i=0;i<(_vars)->size();i++){
-        // (*_vars)[i]->print();
+        (*_vars)[i]->print();
         (*_vars)[i]->codeGen(context);
     }
     return NULL;
@@ -139,6 +141,10 @@ Type *parse_type(string type)
 }
 
 Value *Method::codeGen(CodeGenContext& context) {
+    if(strcmp(this->_id->_id,"main")==0){
+        flag = 1;
+        checkmain = 1;
+    }
     vector<Type *> arg_types;
     for(int i=0;i<(this->_args->_arg)->size();i++){
         arg_types.push_back(parse_type((*(this->_args->_arg))[i].first));
@@ -327,6 +333,9 @@ Value *ArrayInd::codeGen(CodeGenContext& context) {
 }
 
 Value *Identifier::codeGen(CodeGenContext& context) {
+    AllocaInst * allocaInst = new AllocaInst(Type::getInt64Ty(getGlobalContext()), (this->_id), context.topBB());
+    new StoreInst(ConstantInt::get(Type::getInt64Ty(getGlobalContext()), 0, true), allocaInst, false, context.topBB());
+    context.locals()[this->_id] = allocaInst;
     if(context.locals().find(this->_id) == context.locals().end()) {
         // cout << this->_id;
         return ErrorHandler("Variable Identifier Not Declared");
@@ -462,6 +471,7 @@ Value *ContinueStmt::codeGen(CodeGenContext& context){return NULL;}
 
 Value *ForStmt::codeGen(CodeGenContext& context)
 {
+    cout << "lalalal" << endl;
     Value *st = this->_start->codeGen(context);
 
     if(st!=NULL)
